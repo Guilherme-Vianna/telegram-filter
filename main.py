@@ -22,7 +22,7 @@ load_dotenv()
 api_id = int(os.getenv("API_ID"))
 api_hash = os.getenv("API_HASH")
 session_name = os.getenv("SESSION_NAME", "sessao")
-mongo_url = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+mongo_url = os.getenv("MONGO_URL")
 
 logger.info("Starting bot...")
 
@@ -34,11 +34,14 @@ client = TelegramClient(session_name, api_id, api_hash)
 # =====================
 # Mongo
 # =====================
-mongo_client = AsyncIOMotorClient(mongo_url)
-db = mongo_client["telegram"]
-collection = db["mensagens"]
-
-logger.info("Connected to MongoDB")
+try:
+    mongo_client = AsyncIOMotorClient(mongo_url)
+    db = mongo_client["telegram"]
+    collection = db["mensagens"]
+    logger.info("Connected to MongoDB")
+except Exception as e:
+    logger.error(f"Mongo connection failed: {e}")
+    raise
 
 # =====================
 # Handler
@@ -63,6 +66,11 @@ async def handler(event):
 # =====================
 # Run
 # =====================
-client.start()
-logger.info("Bot running. Waiting for messages...")
-client.run_until_disconnected()
+async def main():
+    await client.start()
+    logger.info("Bot running. Waiting for messages...")
+    await client.run_until_disconnected()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())

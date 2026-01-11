@@ -9,7 +9,7 @@ services:
     depends_on:
       - mongo
     environment:
-      - MONGO_URL=mongodb://mongo:27017
+      - MONGO_URL=mongodb://admin:Gui6414@mongo:27017/telegram?authSource=admin
     volumes:
       - ./sessao.session:/app/sessao.session
     restart: unless-stopped
@@ -19,6 +19,9 @@ services:
     container_name: mongodb
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: Gui6414
     volumes:
       - mongo_data:/data/db
     restart: unless-stopped
