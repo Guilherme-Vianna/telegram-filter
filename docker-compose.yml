@@ -11,7 +11,7 @@ services:
     environment:
       - MONGO_URL=mongodb://mongo:27017
     volumes:
-      - .:/app
+      - ./sessao.session:/app/sessao.session
     restart: unless-stopped
 
   mongo:
